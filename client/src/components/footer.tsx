@@ -1,6 +1,16 @@
 import { Heart, Facebook, Twitter, Linkedin, Instagram, Phone, Mail, MapPin } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Footer() {
+  const { toast } = useToast();
+  
+  const handleSocialClick = (platform: string) => {
+    toast({
+      title: `${platform} Coming Soon!`,
+      description: `Follow us on ${platform} for health tips and updates.`,
+    });
+  };
+
   return (
     <footer className="bg-card border-t border-border mt-16">
       <div className="container mx-auto px-4 py-12">
@@ -16,18 +26,38 @@ export default function Footer() {
               Your trusted partner for healthcare appointments. Making healthcare accessible to everyone.
             </p>
             <div className="flex space-x-3">
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Facebook" data-testid="social-facebook">
+              <button 
+                onClick={() => handleSocialClick("Facebook")} 
+                className="text-muted-foreground hover:text-primary transition-colors" 
+                aria-label="Facebook" 
+                data-testid="social-facebook"
+              >
                 <Facebook className="h-5 w-5" aria-hidden="true" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Twitter" data-testid="social-twitter">
+              </button>
+              <button 
+                onClick={() => handleSocialClick("Twitter")} 
+                className="text-muted-foreground hover:text-primary transition-colors" 
+                aria-label="Twitter" 
+                data-testid="social-twitter"
+              >
                 <Twitter className="h-5 w-5" aria-hidden="true" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="LinkedIn" data-testid="social-linkedin">
+              </button>
+              <button 
+                onClick={() => handleSocialClick("LinkedIn")} 
+                className="text-muted-foreground hover:text-primary transition-colors" 
+                aria-label="LinkedIn" 
+                data-testid="social-linkedin"
+              >
                 <Linkedin className="h-5 w-5" aria-hidden="true" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram" data-testid="social-instagram">
+              </button>
+              <button 
+                onClick={() => handleSocialClick("Instagram")} 
+                className="text-muted-foreground hover:text-primary transition-colors" 
+                aria-label="Instagram" 
+                data-testid="social-instagram"
+              >
                 <Instagram className="h-5 w-5" aria-hidden="true" />
-              </a>
+              </button>
             </div>
           </div>
           

@@ -1,13 +1,32 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Heart, Menu, X } from "lucide-react";
 
 export default function Header() {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [userName, setUserName] = useState("");
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+
+  const handleSignIn = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get('email') as string;
+    const name = email.split('@')[0];
+    setUserName(name);
+    setIsSignedIn(true);
+  };
+
+  const handleSignOut = () => {
+    setIsSignedIn(false);
+    setUserName("");
+  };
 
   return (
     <header className="bg-card border-b border-border sticky top-0 z-50">
@@ -36,9 +55,57 @@ export default function Header() {
           </div>
           
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" className="text-muted-foreground hover:text-foreground transition-colors" data-testid="button-signin">
-              Sign In
-            </Button>
+            {isSignedIn ? (
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-muted-foreground">Welcome, {userName}</span>
+                <Button variant="ghost" onClick={handleSignOut} className="text-muted-foreground hover:text-foreground transition-colors" data-testid="button-signout">
+                  Sign Out
+                </Button>
+              </div>
+            ) : (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" className="text-muted-foreground hover:text-foreground transition-colors" data-testid="button-signin">
+                    Sign In
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Sign In to HealthCare+</DialogTitle>
+                    <DialogDescription>
+                      Enter your credentials to access your account
+                    </DialogDescription>
+                  </DialogHeader>
+                  <form onSubmit={handleSignIn} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="your.email@example.com"
+                        required
+                        data-testid="input-signin-email"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="password">Password</Label>
+                      <Input
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="Enter your password"
+                        required
+                        data-testid="input-signin-password"
+                      />
+                    </div>
+                    <Button type="submit" className="w-full" data-testid="button-signin-submit">
+                      Sign In
+                    </Button>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            )}
             <Link href="/booking">
               <Button className="bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium" data-testid="button-book-appointment">
                 Book Appointment

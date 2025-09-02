@@ -45,13 +45,13 @@ export default function Booking() {
       doctor.specialization.toLowerCase().includes(searchQuery.toLowerCase()) ||
       doctor.hospital.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesSpecialization = !selectedSpecialization || 
+    const matchesSpecialization = !selectedSpecialization || selectedSpecialization === "all" || 
       doctor.specialization.toLowerCase() === selectedSpecialization.toLowerCase();
     
-    const matchesGender = !selectedGender || 
+    const matchesGender = !selectedGender || selectedGender === "all" || 
       doctor.gender.toLowerCase() === selectedGender.toLowerCase();
     
-    const matchesLocation = !selectedLocation || 
+    const matchesLocation = !selectedLocation || selectedLocation === "all" || 
       doctor.location.toLowerCase().includes(selectedLocation.toLowerCase());
 
     return matchesSearch && matchesSpecialization && matchesGender && matchesLocation;
@@ -120,7 +120,7 @@ export default function Booking() {
                       <SelectValue placeholder="All Specializations" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Specializations</SelectItem>
+                      <SelectItem value="all">All Specializations</SelectItem>
                       <SelectItem value="cardiology">Cardiology</SelectItem>
                       <SelectItem value="neurology">Neurology</SelectItem>
                       <SelectItem value="pediatrics">Pediatrics</SelectItem>
@@ -135,7 +135,7 @@ export default function Booking() {
                       <SelectValue placeholder="Any" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Any</SelectItem>
+                      <SelectItem value="all">Any</SelectItem>
                       <SelectItem value="male">Male</SelectItem>
                       <SelectItem value="female">Female</SelectItem>
                     </SelectContent>
@@ -162,7 +162,7 @@ export default function Booking() {
                       <SelectValue placeholder="All Locations" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Locations</SelectItem>
+                      <SelectItem value="all">All Locations</SelectItem>
                       <SelectItem value="new york">New York, NY</SelectItem>
                       <SelectItem value="los angeles">Los Angeles, CA</SelectItem>
                       <SelectItem value="chicago">Chicago, IL</SelectItem>

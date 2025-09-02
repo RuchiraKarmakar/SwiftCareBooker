@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import DoctorCard from "@/components/doctor-card";
 import { CalendarPlus, Search, Heart, Brain, Baby, CheckCircle, Users, FileText, Calendar } from "lucide-react";
 import type { Doctor } from "@shared/schema";
@@ -91,7 +92,12 @@ export default function Home() {
                   Book Appointment
                 </Button>
               </Link>
-              <Button variant="outline" className="border-border text-foreground hover:bg-accent transition-colors text-lg font-semibold px-8 py-4" data-testid="button-view-services">
+              <Button 
+                variant="outline" 
+                className="border-border text-foreground hover:bg-accent transition-colors text-lg font-semibold px-8 py-4" 
+                onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
+                data-testid="button-view-services"
+              >
                 View Services
               </Button>
             </div>
@@ -138,9 +144,49 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-semibold mb-3">Cardiology</h3>
               <p className="text-muted-foreground mb-4">Heart health specialists with advanced diagnostic capabilities and treatment options.</p>
-              <Button variant="link" className="text-primary hover:text-primary/80 font-medium p-0" data-testid="button-learn-more-cardiology">
-                Learn More →
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="link" className="text-primary hover:text-primary/80 font-medium p-0" data-testid="button-learn-more-cardiology">
+                    Learn More →
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[600px]">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2">
+                      <Heart className="text-primary h-6 w-6" />
+                      Cardiology Services
+                    </DialogTitle>
+                    <DialogDescription>
+                      Comprehensive cardiovascular care for all your heart health needs
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-semibold mb-2">Our Services Include:</h4>
+                      <ul className="space-y-1 text-sm text-muted-foreground">
+                        <li>• Comprehensive cardiac evaluations</li>
+                        <li>• ECG and stress testing</li>
+                        <li>• Echocardiography</li>
+                        <li>• Heart disease management</li>
+                        <li>• Preventive cardiology consultations</li>
+                        <li>• Cardiac rehabilitation programs</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-2">Why Choose Our Cardiology Department:</h4>
+                      <ul className="space-y-1 text-sm text-muted-foreground">
+                        <li>• Board-certified cardiologists with 15+ years experience</li>
+                        <li>• State-of-the-art diagnostic equipment</li>
+                        <li>• Personalized treatment plans</li>
+                        <li>• 24/7 emergency cardiac care</li>
+                      </ul>
+                    </div>
+                    <Link href="/booking?specialization=cardiology">
+                      <Button className="w-full">Book Cardiology Appointment</Button>
+                    </Link>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </CardContent>
           </Card>
           
@@ -151,9 +197,49 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-semibold mb-3">Neurology</h3>
               <p className="text-muted-foreground mb-4">Expert neurological care for brain and nervous system conditions.</p>
-              <Button variant="link" className="text-primary hover:text-primary/80 font-medium p-0" data-testid="button-learn-more-neurology">
-                Learn More →
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="link" className="text-primary hover:text-primary/80 font-medium p-0" data-testid="button-learn-more-neurology">
+                    Learn More →
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[600px]">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2">
+                      <Brain className="text-secondary h-6 w-6" />
+                      Neurology Services
+                    </DialogTitle>
+                    <DialogDescription>
+                      Advanced neurological care for brain and nervous system disorders
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-semibold mb-2">Our Services Include:</h4>
+                      <ul className="space-y-1 text-sm text-muted-foreground">
+                        <li>• Comprehensive neurological evaluations</li>
+                        <li>• Stroke care and prevention</li>
+                        <li>• Epilepsy treatment and monitoring</li>
+                        <li>• Memory disorders and dementia care</li>
+                        <li>• Headache and migraine management</li>
+                        <li>• Movement disorders treatment</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-2">Why Choose Our Neurology Department:</h4>
+                      <ul className="space-y-1 text-sm text-muted-foreground">
+                        <li>• Board-certified neurologists with specialized training</li>
+                        <li>• Advanced diagnostic imaging and testing</li>
+                        <li>• Comprehensive stroke center</li>
+                        <li>• Multidisciplinary approach to care</li>
+                      </ul>
+                    </div>
+                    <Link href="/booking?specialization=neurology">
+                      <Button className="w-full">Book Neurology Appointment</Button>
+                    </Link>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </CardContent>
           </Card>
           
@@ -164,9 +250,49 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-semibold mb-3">Pediatrics</h3>
               <p className="text-muted-foreground mb-4">Specialized care for infants, children, and adolescents with gentle approach.</p>
-              <Button variant="link" className="text-primary hover:text-primary/80 font-medium p-0" data-testid="button-learn-more-pediatrics">
-                Learn More →
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="link" className="text-primary hover:text-primary/80 font-medium p-0" data-testid="button-learn-more-pediatrics">
+                    Learn More →
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[600px]">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2">
+                      <Baby className="text-accent-foreground h-6 w-6" />
+                      Pediatrics Services
+                    </DialogTitle>
+                    <DialogDescription>
+                      Comprehensive healthcare for children from birth through adolescence
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-semibold mb-2">Our Services Include:</h4>
+                      <ul className="space-y-1 text-sm text-muted-foreground">
+                        <li>• Well-child checkups and vaccinations</li>
+                        <li>• Developmental assessments</li>
+                        <li>• Acute illness care</li>
+                        <li>• Chronic condition management</li>
+                        <li>• Adolescent medicine</li>
+                        <li>• Behavioral and developmental support</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-2">Why Choose Our Pediatrics Department:</h4>
+                      <ul className="space-y-1 text-sm text-muted-foreground">
+                        <li>• Board-certified pediatricians with specialized training</li>
+                        <li>• Child-friendly environment and approach</li>
+                        <li>• Comprehensive preventive care programs</li>
+                        <li>• Family-centered care philosophy</li>
+                      </ul>
+                    </div>
+                    <Link href="/booking?specialization=pediatrics">
+                      <Button className="w-full">Book Pediatrics Appointment</Button>
+                    </Link>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </CardContent>
           </Card>
         </div>

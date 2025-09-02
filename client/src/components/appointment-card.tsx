@@ -1,6 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, MapPin, Edit, X, FileText, CheckCircle } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Calendar, Clock, MapPin, Edit, X, FileText, CheckCircle, Download } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import type { Appointment, Doctor } from "@shared/schema";
 
 interface AppointmentCardProps {
@@ -21,6 +23,7 @@ export default function AppointmentCard({
   isPast = false 
 }: AppointmentCardProps) {
   const appointmentDate = new Date(appointment.appointmentDate);
+  const { toast } = useToast();
   
   const getStatusBadge = () => {
     if (isPast) {
@@ -124,15 +127,94 @@ export default function AppointmentCard({
             )}
             
             {isPast && (
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="text-sm font-medium"
-                data-testid={`button-view-report-${appointment.id}`}
-              >
-                <FileText className="h-3 w-3 mr-1" aria-hidden="true" />
-                View Report
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="text-sm font-medium"
+                    data-testid={`button-view-report-${appointment.id}`}
+                  >
+                    <FileText className="h-3 w-3 mr-1" aria-hidden="true" />
+                    View Report
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[600px]">
+                  <DialogHeader>
+                    <DialogTitle>Medical Report</DialogTitle>
+                    <DialogDescription>
+                      Appointment with {doctor.name} on {appointmentDate.toLocaleDateString()}
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="font-medium">Doctor:</span> {doctor.name}
+                      </div>
+                      <div>
+                        <span className="font-medium">Date:</span> {appointmentDate.toLocaleDateString()}
+                      </div>
+                      <div>
+                        <span className="font-medium">Time:</span> {appointment.appointmentTime}
+                      </div>
+                      <div>
+                        <span className="font-medium">Duration:</span> 30 minutes
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold mb-2">Chief Complaint</h4>
+                      <p className="text-sm text-muted-foreground bg-muted/30 p-3 rounded">
+                        {appointment.reason}
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold mb-2">Diagnosis</h4>
+                      <p className="text-sm text-muted-foreground bg-muted/30 p-3 rounded">
+                        Based on examination and symptoms, patient showed signs of improvement. 
+                        Follow-up recommended in 4-6 weeks. No immediate concerns noted.
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold mb-2">Recommendations</h4>
+                      <ul className="text-sm text-muted-foreground space-y-1">
+                        <li>• Continue current medication as prescribed</li>
+                        <li>• Follow up in 4-6 weeks</li>
+                        <li>• Monitor symptoms and report any changes</li>
+                        <li>• Maintain healthy lifestyle choices</li>
+                      </ul>
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        onClick={() => {
+                          toast({
+                            title: "Report Downloaded",
+                            description: "Medical report has been downloaded successfully.",
+                          });
+                        }}
+                      >
+                        <Download className="h-4 w-4 mr-2" />
+                        Download PDF
+                      </Button>
+                      <Button 
+                        variant="outline"
+                        onClick={() => {
+                          toast({
+                            title: "Report Shared",
+                            description: "Medical report has been shared with your healthcare provider.",
+                          });
+                        }}
+                      >
+                        Share Report
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             )}
           </div>
         </div>

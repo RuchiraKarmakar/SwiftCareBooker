@@ -3,10 +3,12 @@ import { Link, useParams } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Download, CalendarPlus, LayoutDashboard } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import type { Appointment, Doctor } from "@shared/schema";
 
 export default function Confirmation() {
   const { appointmentId } = useParams<{ appointmentId: string }>();
+  const { toast } = useToast();
   
   const { data: appointment, isLoading } = useQuery<Appointment>({
     queryKey: [`/api/appointments/${appointmentId}`],
@@ -52,6 +54,64 @@ export default function Confirmation() {
   }
 
   const appointmentDate = new Date(appointment.appointmentDate);
+
+  const handleDownloadConfirmation = () => {
+    if (!appointment || !doctor) return;
+    
+    // Create a simple text confirmation that can be downloaded
+    const confirmationText = `
+HEALTHCARE+ APPOINTMENT CONFIRMATION
+
+Booking ID: ${appointment.bookingId}
+Patient: ${appointment.patientName}
+Doctor: ${doctor.name}
+Specialization: ${doctor.specialization}
+Hospital: ${doctor.hospital}
+Date: ${appointmentDate.toLocaleDateString()}
+Time: ${appointment.appointmentTime}
+Fee: $${appointment.fee}
+
+Please arrive 15 minutes before your scheduled appointment.
+Bring a valid ID and insurance card.
+
+Thank you for choosing HealthCare+!
+`;
+
+    const blob = new Blob([confirmationText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `appointment-confirmation-${appointment.bookingId}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast({
+      title: "Confirmation Downloaded",
+      description: "Your appointment confirmation has been downloaded successfully.",
+    });
+  };
+
+  const handleAddToCalendar = () => {
+    if (!appointment || !doctor) return;
+    
+    const startDate = new Date(appointment.appointmentDate);
+    const endDate = new Date(startDate.getTime() + 30 * 60000); // 30 minutes appointment
+    
+    const formatDate = (date: Date) => {
+      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+    
+    const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`Appointment with ${doctor.name}`)}&dates=${formatDate(startDate)}/${formatDate(endDate)}&details=${encodeURIComponent(`Doctor: ${doctor.name}\nSpecialization: ${doctor.specialization}\nHospital: ${doctor.hospital}\nBooking ID: ${appointment.bookingId}\nReason: ${appointment.reason}`)}&location=${encodeURIComponent(doctor.hospital)}`;
+    
+    window.open(calendarUrl, '_blank');
+    
+    toast({
+      title: "Calendar Event Created",
+      description: "Your appointment has been added to Google Calendar.",
+    });
+  };
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -154,11 +214,11 @@ export default function Confirmation() {
         
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button variant="outline" data-testid="button-download-confirmation">
+          <Button variant="outline" onClick={handleDownloadConfirmation} data-testid="button-download-confirmation">
             <Download className="h-4 w-4 mr-2" aria-hidden="true" />
             Download Confirmation
           </Button>
-          <Button variant="outline" data-testid="button-add-to-calendar">
+          <Button variant="outline" onClick={handleAddToCalendar} data-testid="button-add-to-calendar">
             <CalendarPlus className="h-4 w-4 mr-2" aria-hidden="true" />
             Add to Calendar
           </Button>

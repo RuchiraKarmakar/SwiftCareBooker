@@ -174,7 +174,11 @@ export class MemStorage implements IStorage {
 
   async createDoctor(insertDoctor: InsertDoctor): Promise<Doctor> {
     const id = randomUUID();
-    const doctor: Doctor = { ...insertDoctor, id };
+    const doctor: Doctor = { 
+      ...insertDoctor, 
+      id,
+      isAvailable: insertDoctor.isAvailable ?? true
+    };
     this.doctors.set(id, doctor);
     return doctor;
   }
@@ -207,6 +211,8 @@ export class MemStorage implements IStorage {
       id,
       bookingId,
       createdAt: new Date(),
+      medicalHistory: insertAppointment.medicalHistory || "",
+      status: insertAppointment.status || "confirmed",
     };
     this.appointments.set(id, appointment);
     return appointment;
@@ -250,7 +256,11 @@ export class MemStorage implements IStorage {
 
   async createTimeSlot(insertTimeSlot: InsertTimeSlot): Promise<TimeSlot> {
     const id = randomUUID();
-    const timeSlot: TimeSlot = { ...insertTimeSlot, id };
+    const timeSlot: TimeSlot = { 
+      ...insertTimeSlot, 
+      id,
+      isAvailable: insertTimeSlot.isAvailable ?? true
+    };
     this.timeSlots.set(id, timeSlot);
     return timeSlot;
   }
